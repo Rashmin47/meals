@@ -1,103 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals/providers/filters_provider.dart';
+
 // 'package:meals/screens/tabs.dart';
 // import 'package:meals/widgets/main_drawer.dart';
 
-enum Filter {
-  glutenFree,
-  lactoseFree
-}
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({super.key, required this.currentFilters});
-final Map<Filter, bool> currentFilters;
-  @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
-}
 
-class _FiltersScreenState extends State<FiltersScreen> {
-  var _glutenFreeFilterSet = false;
-  var _lactoseFreeFilterSet = false;
+class FiltersScreen extends ConsumerWidget {
+  const FiltersScreen({super.key});
+
+
 
   @override
-  void initState() {
-
-    super.initState();
-    _glutenFreeFilterSet = widget.currentFilters[Filter.glutenFree]!;
-    _lactoseFreeFilterSet = widget.currentFilters[Filter.lactoseFree]!;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeFilters  = ref.watch(filtersProvider);
     return Scaffold(
       appBar: AppBar(
 
         title: Text('Filters'),
       ),
-      // drawer: MainDrawer(
-      //   onSelectScreen: (identifier) {
-      //     Navigator.of(context).pop();
-      //     if (identifier == 'meals') {
-      //       Navigator.of(
-      //         context,
-      //       ).pushReplacement(MaterialPageRoute(builder: (context) => TabsScreen()));
-      //     }
-      //   },
-      // ),
-      body: WillPopScope(
-        onWillPop: () async {
-          Navigator.of(context).pop({
-Filter.glutenFree: _glutenFreeFilterSet,
-Filter.lactoseFree: _lactoseFreeFilterSet
-          });
-          return false;
-        },
-        child: Column(
+
+      body: Column(
           children: [
             SwitchListTile(
-              value: _glutenFreeFilterSet,
+              value: activeFilters[Filter.glutenFree]!,
               onChanged: (isChecked) {
-                setState(() {
-                  _glutenFreeFilterSet = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(Filter.glutenFree, isChecked);
               },
               title: Text(
                 'Gluten-free',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .onSurface,
                 ),
               ),
               subtitle: Text(
                 'Only include gluten-free meals.',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .labelMedium!
+                    .copyWith(
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .onSurface,
                 ),
               ),
-              activeThumbColor: Theme.of(context).colorScheme.tertiary,
+              activeThumbColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .tertiary,
               contentPadding: EdgeInsets.only(left: 34, right: 22),
-            ),SwitchListTile(
-              value: _lactoseFreeFilterSet,
+            ), SwitchListTile(
+              value: activeFilters[Filter.lactoseFree]!,
               onChanged: (isChecked) {
-                setState(() {
-                  _lactoseFreeFilterSet = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(Filter.lactoseFree, isChecked);
               },
               title: Text(
                 'Lactose-free',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .onSurface,
                 ),
               ),
               subtitle: Text(
                 'Only include lactose-free meals.',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .labelMedium!
+                    .copyWith(
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .onSurface,
                 ),
               ),
-              activeThumbColor: Theme.of(context).colorScheme.tertiary,
+              activeThumbColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .tertiary,
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
